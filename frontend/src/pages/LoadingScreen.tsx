@@ -62,7 +62,7 @@ export default function LoadingScreen() {
         if (linkedinUrl) formData.append('linkedinUrl', linkedinUrl);
         if (resumeFile) formData.append('resume', resumeFile);
 
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const baseUrl = import.meta.env.VITE_API_URL || '';
         const [response] = await Promise.all([
           fetch(`${baseUrl}/api/analyze`, { method: 'POST', body: formData }),
           new Promise(r => setTimeout(r, 4000))

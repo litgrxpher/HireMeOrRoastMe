@@ -39,7 +39,7 @@ export default function ResultsPage() {
           addedImpact: 'Metrics and impact added to transform vague duties into results-driven statements.'
         });
       } else {
-        const res = await fetch('http://localhost:3001/api/fix-resume', {
+        const res = await fetch('/api/fix-resume', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ resumeText: profData.overallImpression, targetRole: role })
