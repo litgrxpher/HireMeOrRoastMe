@@ -1,0 +1,18 @@
+{
+  "name": "hire-me-or-roast-me-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "install-backend": "cd api && npm install"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "pdf-parse": "^2.4.5",
+    "mammoth": "^1.12.0",
+    "@google/genai": "^1.47.0",
+    "dotenv": "^17.3.1"
+  }
+}

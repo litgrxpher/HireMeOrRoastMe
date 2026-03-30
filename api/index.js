@@ -64,6 +64,8 @@ app.post('/api/fix-resume', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`HireMeOrRoastMe backend running on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`HireMeOrRoastMe backend running on port ${port}`);
+// });
+
+module.exports = app;
