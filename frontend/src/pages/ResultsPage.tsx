@@ -73,6 +73,30 @@ export default function ResultsPage() {
   const substancePct = roastData.substanceDensity ?? (100 - (roastData.buzzwordDensity ?? 0));
   const buzzPct = roastData.buzzwordDensity ?? 0;
 
+  // Error/Empty State handling
+  if (error || !analysis) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 text-center">
+        <StarsBackground showMeteors={true} />
+        <div className="z-10 max-w-md">
+          <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/50">
+            <span className="material-symbols-outlined text-red-500 text-4xl">warning</span>
+          </div>
+          <h2 className="text-3xl font-headline font-bold mb-4">Analysis Failed</h2>
+          <p className="text-white/60 mb-8 font-body">
+            {error || "We couldn't generate your analysis. This usually happens if the resume couldn't be parsed or the AI was too intimidated by your profile."}
+          </p>
+          <button 
+            onClick={() => navigate('/')}
+            className="px-8 py-3 bg-white text-black rounded-full font-bold hover:scale-105 transition-all active:scale-95"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <style>{`

@@ -44,7 +44,7 @@ const STYLES = `
 export default function LoadingScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { role, linkedinUrl, mode, roastLevel } = location.state || {};
+  const { role, linkedinUrl, resumeFile, mode, roastLevel } = location.state || {};
 
   const [messageIndex, setMessageIndex] = useState(0);
 
@@ -60,9 +60,11 @@ export default function LoadingScreen() {
         formData.append('roastLevel', roastLevel || 'Medium');
         formData.append('targetRole', role || '');
         if (linkedinUrl) formData.append('linkedinUrl', linkedinUrl);
+        if (resumeFile) formData.append('resume', resumeFile);
 
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
         const [response] = await Promise.all([
-          fetch('http://localhost:3001/api/analyze', { method: 'POST', body: formData }),
+          fetch(`${baseUrl}/api/analyze`, { method: 'POST', body: formData }),
           new Promise(r => setTimeout(r, 4000))
         ]);
         
