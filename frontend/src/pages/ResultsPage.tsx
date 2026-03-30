@@ -107,9 +107,12 @@ export default function ResultsPage() {
         <StarsBackground showMeteors={false} />
         
         {/* Navbar */}
-        <nav className="no-print flex justify-between items-center px-6 py-4 border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
-          <div onClick={() => navigate('/')} className="text-xl font-black tracking-tighter text-on-surface font-headline cursor-pointer hover:text-primary transition-colors">
-            HireMeOrRoastMe
+        <nav className="no-print flex justify-between items-center px-6 h-20 border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
+          <div onClick={() => navigate('/')} className="flex items-center gap-3 cursor-pointer group">
+            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain rounded-lg shadow-[0_0_15px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform" />
+            <div className="text-xl font-black tracking-tighter text-on-surface font-headline transition-colors group-hover:text-primary">
+              HireMeOrRoastMe
+            </div>
           </div>
           <button onClick={() => navigate('/')} className="px-5 py-2 rounded-full border border-white/10 text-sm font-label hover:bg-white/5 transition-all text-white/70">
             New Analysis

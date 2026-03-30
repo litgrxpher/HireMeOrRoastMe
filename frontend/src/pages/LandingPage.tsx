@@ -483,10 +483,19 @@ export default function LandingPage() {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 py-8 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <p className="text-white/15 text-xs tracking-widest uppercase font-body">
+      <div className="relative z-10 py-12 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <p className="text-white/15 text-xs tracking-widest uppercase font-body mb-4">
           © 2024 HireMeOrRoastMe · Powered by Gemini AI
         </p>
+        <a 
+          href="https://www.linkedin.com/in/csadharsh/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-white/30 hover:text-primary transition-colors text-xs font-semibold tracking-widest uppercase group"
+        >
+          <span className="material-symbols-outlined text-sm group-hover:scale-110 transition-transform">contact_page</span>
+          Made by Litgrxpher
+        </a>
       </div>
     </div>
   );
