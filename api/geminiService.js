@@ -103,11 +103,25 @@ async function callGemini(prompt, instruction) {
             }
         };
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+        let response;
+        try {
+            response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+            });
+        } catch (fetchErr) {
+            if (fetchErr.name === 'AbortError') {
+                throw new Error('Request timed out after 30 seconds. Please try again.');
+            }
+            throw fetchErr;
+        } finally {
+            clearTimeout(timeoutId);
+        }
 
         if (!response.ok) {
             const errorData = await response.json();
