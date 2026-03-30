@@ -104,7 +104,7 @@ async function callGemini(prompt, instruction) {
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 9000); // 9s timeout for Vercel Hobby
 
         let response;
         try {
