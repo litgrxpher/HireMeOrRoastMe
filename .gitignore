@@ -1,0 +1,27 @@
+# Dependency directories
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment files
+**/.env
+**/.env.*
+!.env.example
+
+# TestSprite files
+testsprite_log.txt
+testsprite_log_utf8.txt
+full_testsprite_log.txt
+full_testsprite_log_utf8.txt
+dashboard_result.txt
+testsprite_tests/
+
+# Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

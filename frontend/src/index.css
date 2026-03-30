@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* Deep black/purple palette */
+  --color-surface-dim:               #050507;
+  --color-surface:                   #050507;
+  --color-background:                #050507;
+  --color-surface-container-lowest:  #08080d;
+  --color-surface-container-low:     #0d0d15;
+  --color-surface-container:         #11111c;
+  --color-surface-container-high:    #16162a;
+  --color-surface-container-highest: #1e1e35;
+  --color-surface-bright:            #2a2a48;
+  --color-surface-variant:           #1a1a2e;
+  --color-surface-tint:              #7c5cfc;
+  --color-inverse-surface:           #e8e8f5;
+  --color-inverse-on-surface:        #1a1a2e;
+
+  /* Primary — vibrant violet */
+  --color-primary:                   #8b5cf6;
+  --color-on-primary:                #ffffff;
+  --color-primary-container:         #5b21b6;
+  --color-on-primary-container:      #ede9fe;
+  --color-primary-fixed:             #ddd6fe;
+  --color-primary-fixed-dim:         #c4b5fd;
+  --color-inverse-primary:           #6d28d9;
+  --color-on-primary-fixed:          #2e1065;
+  --color-on-primary-fixed-variant:  #4c1d95;
+
+  /* Secondary — soft indigo */
+  --color-secondary:                 #a78bfa;
+  --color-on-secondary:              #1e1b4b;
+  --color-secondary-container:       #4338ca;
+  --color-on-secondary-container:    #e0e7ff;
+  --color-secondary-fixed:           #e0e7ff;
+  --color-secondary-fixed-dim:       #c7d2fe;
+  --color-on-secondary-fixed:        #1e1b4b;
+  --color-on-secondary-fixed-variant:#3730a3;
+
+  /* Tertiary — electric cyan accent */
+  --color-tertiary:                  #67e8f9;
+  --color-on-tertiary:               #083344;
+  --color-tertiary-container:        #0e7490;
+  --color-on-tertiary-container:     #cffafe;
+  --color-tertiary-fixed:            #cffafe;
+  --color-tertiary-fixed-dim:        #a5f3fc;
+  --color-on-tertiary-fixed:         #083344;
+  --color-on-tertiary-fixed-variant: #0e7490;
+  --color-tertiary-fixed:            #cffafe;
+
+  /* Error */
+  --color-error:                     #f87171;
+  --color-on-error:                  #7f1d1d;
+  --color-error-container:           #991b1b;
+  --color-on-error-container:        #fecaca;
+
+  /* Text */
+  --color-on-surface:                #f0f0ff;
+  --color-on-surface-variant:        #9090bb;
+  --color-on-background:             #f0f0ff;
+  --color-outline:                   #5050a0;
+  --color-outline-variant:           #2a2a50;
+
+  --font-headline: "Plus Jakarta Sans", sans-serif;
+  --font-body:     "Inter", sans-serif;
+  --font-label:    "Inter", sans-serif;
+
+  --radius-DEFAULT: 0.75rem;
+  --radius-lg:      1.25rem;
+  --radius-xl:      2rem;
+  --radius-full:    9999px;
+}
+
+@layer utilities {
+  @keyframes gradient-shift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-12px); }
+  }
+
+  .animated-bg {
+    background: #050507;
+  }
+
+  .cosmos-glow {
+    position: relative;
+  }
+  .cosmos-glow::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124, 58, 237, 0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 80% 90%,  rgba(99,  102, 241, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 30% at 10% 60%,  rgba(139, 92,  246, 0.08) 0%, transparent 60%);
+    z-index: 0;
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .mesh-glow {
+    background-image:
+      radial-gradient(at 50% 0%,  rgba(124, 58, 237, 0.2) 0, transparent 55%),
+      radial-gradient(at 90% 80%, rgba(99,  102, 241, 0.1) 0, transparent 50%);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
