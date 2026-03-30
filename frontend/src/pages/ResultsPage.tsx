@@ -11,9 +11,9 @@ export default function ResultsPage() {
   const profData = analysis?.professional || {};
   const roastData = analysis?.roast || {};
 
-  const showProfessional = mode === 'Professional' || mode === 'Both';
-  const showRoast = mode === 'Roast' || mode === 'Both';
-  const isBothMode = mode === 'Both';
+  const showProfessional = (mode?.toLowerCase() === 'professional' || mode?.toLowerCase() === 'both');
+  const showRoast = (mode?.toLowerCase() === 'roast' || mode?.toLowerCase() === 'both');
+  const isBothMode = mode?.toLowerCase() === 'both';
 
   const [activeTab, setActiveTab] = useState<'professional' | 'roast'>(
     showProfessional ? 'professional' : 'roast'
@@ -109,7 +109,6 @@ export default function ResultsPage() {
         {/* Navbar */}
         <nav className="no-print flex justify-between items-center px-6 h-20 border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
           <div onClick={() => navigate('/')} className="flex items-center gap-3 cursor-pointer group">
-            <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain rounded-lg shadow-[0_0_15px_rgba(139,92,246,0.3)] group-hover:scale-110 transition-transform" />
             <div className="text-xl font-black tracking-tighter text-on-surface font-headline transition-colors group-hover:text-primary">
               HireMeOrRoastMe
             </div>
@@ -132,29 +131,28 @@ export default function ResultsPage() {
 
             {/* Tab Bar — only shown in Both mode */}
             {isBothMode && (
-              <div className="no-print flex rounded-2xl bg-surface-container-high/60 p-1.5 gap-1.5 border border-white/5">
+              <div className="no-print flex rounded-2xl bg-surface-container-high/40 p-1.5 gap-1.5 border border-white/10 shadow-2xl backdrop-blur-md mb-2">
                 <button
                   onClick={() => setActiveTab('professional')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-headline font-bold text-sm transition-all duration-300 ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-headline font-black text-xs uppercase tracking-widest transition-all duration-300 ${
                     activeTab === 'professional'
-                      ? 'bg-primary text-on-primary shadow-[0_0_20px_rgba(173,198,255,0.3)]'
-                      : 'text-on-surface-variant hover:text-on-surface hover:bg-white/5'
+                      ? 'bg-primary text-on-primary shadow-[0_0_25px_rgba(139,92,246,0.5)]'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-white/10'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-lg">work</span>
-                  Professional Verdict
+                  <span className="material-symbols-outlined text-sm">verified</span>
+                  Review
                 </button>
                 <button
                   onClick={() => setActiveTab('roast')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-headline font-bold text-sm transition-all duration-300 ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-headline font-black text-xs uppercase tracking-widest transition-all duration-300 ${
                     activeTab === 'roast'
-                      ? 'bg-tertiary text-[#131313] shadow-[0_0_20px_rgba(255,181,160,0.3)]'
-                      : 'text-on-surface-variant hover:text-on-surface hover:bg-white/5'
+                      ? 'bg-tertiary text-on-tertiary shadow-[0_0_25px_rgba(103,232,249,0.5)]'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-white/10'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-lg">local_fire_department</span>
-                  Savage Roast
-                  {roastLevel && <span className="ml-1 px-2 py-0.5 rounded-full bg-black/20 text-xs uppercase">{roastLevel}</span>}
+                  <span className="material-symbols-outlined text-sm">local_fire_department</span>
+                  Roast
                 </button>
               </div>
             )}

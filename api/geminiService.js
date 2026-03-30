@@ -92,7 +92,8 @@ async function fixResume(params) {
 
 async function callGemini(prompt, instruction) {
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        const model = process.env.GEMINI_MODEL || 'gemini-3-flash-preview';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         
         const payload = {
             contents: [{ parts: [{ text: prompt }] }],

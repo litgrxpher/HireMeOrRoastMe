@@ -56,6 +56,54 @@ const STYLES = `
     75% { transform: translateX(4px); }
   }
   .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
+  
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .holographic-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s ease-out;
+  }
+
+  .holographic-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(139, 92, 246, 0.05) 45%,
+      rgba(139, 92, 246, 0.2) 50%,
+      rgba(139, 92, 246, 0.05) 55%,
+      transparent 100%
+    );
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+  }
+
+  .holographic-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .holographic-card:hover::after {
+    opacity: 1;
+  }
+  
+  .holographic-card:hover::after {
+    opacity: 1;
+  }
 `;
 
 export default function LandingPage() {
@@ -240,7 +288,10 @@ export default function LandingPage() {
           }
         });
       },
-      { threshold: 0.12 }
+      { 
+        threshold: 0.05,
+        rootMargin: '0px 0px -10% 0px'
+      }
     );
     targets.forEach((t) => io.observe(t));
     return () => io.disconnect();
@@ -253,21 +304,26 @@ export default function LandingPage() {
       {/* ── Fixed particle background layer ── */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ background: '#050507' }}>
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-        {/* ── Nav ── */}
-        <nav className="fixed top-0 w-full z-50 flex items-center px-8 h-24">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <svg aria-label="HireMeOrRoastMe Logo" height="32" viewBox="0 0 16 16" width="32" className="w-8 h-8 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(17,133,254,0.4)]">
-              <path fill="#1185FE" d="M3.47 1.95A19 19 0 0 1 8 7.62c.73-1.5 2.7-4.3 4.53-5.67C13.86.95 16 .19 16 2.63c0 .5-.28 4.1-.44 4.7-.58 2.03-2.66 2.55-4.5 2.24 3.23.55 4.05 2.38 2.27 4.2-3.37 3.46-4.85-.87-5.23-1.98q-.1-.32-.1-.22 0-.1-.1.22c-.38 1.11-1.86 5.44-5.23 1.98-1.78-1.82-.96-3.65 2.28-4.2C3.1 9.89 1 9.37.45 7.32A48 48 0 0 1 0 2.63C0 .2 2.15.96 3.47 1.95"></path>
-            </svg>
-            <div className="text-2xl font-black tracking-tighter text-white font-headline group-hover:text-primary transition-colors">
-              HireMeOrRoastMe
-            </div>
-          </div>
-        </nav>
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full"
           style={{ background: 'radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 70%)' }}
         />
       </div>
+
+      {/* ── Nav ── */}
+      <nav className="fixed top-0 w-full z-50 flex items-center justify-between px-8 h-24">
+        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <svg aria-label="HireMeOrRoastMe Logo" height="32" viewBox="0 0 16 16" width="32" className="w-8 h-8 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(17,133,254,0.4)]">
+            <path fill="#1185FE" d="M3.47 1.95A19 19 0 0 1 8 7.62c.73-1.5 2.7-4.3 4.53-5.67C13.86.95 16 .19 16 2.63c0 .5-.28 4.1-.44 4.7-.58 2.03-2.66 2.55-4.5 2.24 3.23.55 4.05 2.38 2.27 4.2-3.37 3.46-4.85-.87-5.23-1.98q-.1-.32-.1-.22 0-.1-.1.22c-.38 1.11-1.86 5.44-5.23 1.98-1.78-1.82-.96-3.65 2.28-4.2C3.1 9.89 1 9.37.45 7.32A48 48 0 0 1 0 2.63C0 .2 2.15.96 3.47 1.95"></path>
+          </svg>
+          <div className="text-2xl font-black tracking-tighter text-white font-headline group-hover:text-primary transition-colors">
+            HireMeOrRoastMe
+          </div>
+        </div>
+        <div className="hidden md:flex items-center gap-8">
+          <button onClick={() => formRef.current?.scrollIntoView({ behavior: 'smooth' })} className="text-white/40 hover:text-white text-xs font-bold tracking-widest uppercase transition-colors">Verdict</button>
+          <button onClick={() => document.getElementById('about-section')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/40 hover:text-white text-xs font-bold tracking-widest uppercase transition-colors">About</button>
+        </div>
+      </nav>
 
       {/* ── HERO ── */}
       <div ref={heroRef} className="relative z-10 h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
@@ -479,6 +535,48 @@ export default function LandingPage() {
               <div key={f.label} className="flex items-center gap-1.5 text-white/25">
                 <span className="material-symbols-outlined text-base text-purple-400/50">{f.icon}</span>
                 <span className="text-xs font-body">{f.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── ABOUT SECTION (Centered) ── */}
+      <div id="about-section" className="relative z-10 py-32 px-6 overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center space-y-20">
+          
+          <div className="reveal space-y-8" data-delay="100">
+            <h2 className="font-headline font-black text-white text-5xl md:text-7xl tracking-tighter leading-[1.1]">
+              Why settle for a <br />
+              <span className="text-primary">boring </span>
+              <span className="text-cyan-400">audit?</span>
+            </h2>
+            <p className="text-white/40 text-lg md:text-xl font-body leading-relaxed max-w-2xl mx-auto">
+              HireMeOrRoastMe was born at the intersection of professional growth and internet culture. We believe the best feedback is either brutally honest or hilariously savage.
+            </p>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
+            {[
+              {
+                title: "The Professional Mode",
+                desc: "Surgical analysis of your resume. We find the gaps and highlight the wins.",
+                icon: "verified"
+              },
+              {
+                title: "The Savage Roast",
+                desc: "No mercy. Our AI deconstructs your buzzwords with high-velocity wit.",
+                icon: "local_fire_department"
+              }
+            ].map((item, i) => (
+              <div key={item.title} className="reveal flex flex-col items-center group max-w-xs" data-delay={150 + (i * 100)}>
+                <div className="w-16 h-16 rounded-full bg-white/2 border border-white/10 flex items-center justify-center mb-6 transition-all group-hover:border-primary/50 group-hover:bg-primary/5">
+                  <span className="material-symbols-outlined text-white/40 group-hover:text-primary text-3xl transition-colors">
+                    {item.icon}
+                  </span>
+                </div>
+                <h3 className="text-white font-bold text-xl mb-3">{item.title}</h3>
+                <p className="text-white/30 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
