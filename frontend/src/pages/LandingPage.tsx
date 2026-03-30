@@ -59,16 +59,16 @@ const STYLES = `
 `;
 
 export default function LandingPage() {
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
   const [targetRole, setTargetRole] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const formRef    = useRef<HTMLDivElement>(null);
-  const heroRef    = useRef<HTMLDivElement>(null);
-  const canvasRef  = useRef<HTMLCanvasElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
 
   const handleStart = () => {
@@ -83,12 +83,12 @@ export default function LandingPage() {
       return;
     }
 
-    navigate('/mode', { 
-      state: { 
-        role: targetRole.trim(), 
+    navigate('/mode', {
+      state: {
+        role: targetRole.trim(),
         linkedinUrl: linkedinUrl.trim(),
         resumeFile: selectedFile // Note: File objects might not persist well in history state depending on browser, but fine for now.
-      } 
+      }
     });
   };
 
@@ -135,7 +135,7 @@ export default function LandingPage() {
     let raf: number;
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       const mouseRange = 180;
 
       for (let i = 0; i < pts.length; i++) {
@@ -212,7 +212,7 @@ export default function LandingPage() {
       const heroInner = hero.querySelector<HTMLElement>('.hero-inner');
       if (heroInner) {
         heroInner.style.transform = `translateY(${pct * -80}px)`;
-        heroInner.style.opacity   = `${1 - pct * 1.6}`;
+        heroInner.style.opacity = `${1 - pct * 1.6}`;
       }
 
       // 2. Scroll-cue arrow: fade out fast
@@ -253,33 +253,36 @@ export default function LandingPage() {
       {/* ── Fixed particle background layer ── */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={{ background: '#050507' }}>
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-        {/* Bottom right indigo - keeps the depth while scrolling */}
+        {/* ── Nav ── */}
+        <nav className="fixed top-0 w-full z-50 flex items-center px-8 h-24">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <svg aria-label="HireMeOrRoastMe Logo" height="32" viewBox="0 0 16 16" width="32" className="w-8 h-8 group-hover:rotate-12 transition-transform drop-shadow-[0_0_10px_rgba(17,133,254,0.4)]">
+              <path fill="#1185FE" d="M3.47 1.95A19 19 0 0 1 8 7.62c.73-1.5 2.7-4.3 4.53-5.67C13.86.95 16 .19 16 2.63c0 .5-.28 4.1-.44 4.7-.58 2.03-2.66 2.55-4.5 2.24 3.23.55 4.05 2.38 2.27 4.2-3.37 3.46-4.85-.87-5.23-1.98q-.1-.32-.1-.22 0-.1-.1.22c-.38 1.11-1.86 5.44-5.23 1.98-1.78-1.82-.96-3.65 2.28-4.2C3.1 9.89 1 9.37.45 7.32A48 48 0 0 1 0 2.63C0 .2 2.15.96 3.47 1.95"></path>
+            </svg>
+            <div className="text-2xl font-black tracking-tighter text-white font-headline group-hover:text-primary transition-colors">
+              HireMeOrRoastMe
+            </div>
+          </div>
+        </nav>
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full"
           style={{ background: 'radial-gradient(ellipse, rgba(99,102,241,0.1) 0%, transparent 70%)' }}
         />
       </div>
 
-      {/* ── Nav ── */}
-      <nav className="fixed top-0 w-full z-50 flex items-center px-8 h-16">
-        <div className="text-lg font-black tracking-tight text-white font-headline">
-          HireMeOrRoastMe
-        </div>
-      </nav>
-
       {/* ── HERO ── */}
       <div ref={heroRef} className="relative z-10 h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        
+
         {/* Whirling Orb Loader Behind Text */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style={{ zIndex: -1 }}>
           <div className="hero-orb"></div>
         </div>
 
         {/* Static Glow Patch - reduced opacity to blend with orb */}
-        <div 
+        <div
           className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full pointer-events-none"
-          style={{ 
+          style={{
             background: 'radial-gradient(ellipse, rgba(124,58,237,0.15) 0%, transparent 70%)',
-            zIndex: -2 
+            zIndex: -2
           }}
         />
 
@@ -371,7 +374,7 @@ export default function LandingPage() {
                   className="w-full py-3.5 pl-11 pr-4 rounded-xl text-white text-sm font-body outline-none transition-all"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}
                   onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(139,92,246,0.08)'; }}
-                  onBlur={(e)  => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
                   placeholder="e.g. Senior Software Engineer…"
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
@@ -388,7 +391,7 @@ export default function LandingPage() {
                   className="w-full py-3.5 pl-11 pr-4 rounded-xl text-white text-sm font-body outline-none transition-all"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}
                   onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(139,92,246,0.08)'; }}
-                  onBlur={(e)  => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
                   placeholder="https://linkedin.com/in/yourname"
                   value={linkedinUrl}
                   onChange={(e) => setLinkedinUrl(e.target.value)}
@@ -469,9 +472,9 @@ export default function LandingPage() {
           {/* Feature row reveal */}
           <div className="reveal flex items-center justify-center gap-8 mt-8" data-delay="240">
             {[
-              { icon: 'psychology',           label: 'AI-Driven Analysis' },
-              { icon: 'local_fire_department', label: 'Savage Roast Mode'  },
-              { icon: 'shield',                label: 'Private & Secure'   },
+              { icon: 'psychology', label: 'AI-Driven Analysis' },
+              { icon: 'local_fire_department', label: 'Savage Roast Mode' },
+              { icon: 'shield', label: 'Private & Secure' },
             ].map((f) => (
               <div key={f.label} className="flex items-center gap-1.5 text-white/25">
                 <span className="material-symbols-outlined text-base text-purple-400/50">{f.icon}</span>
@@ -485,11 +488,11 @@ export default function LandingPage() {
       {/* Footer */}
       <div className="relative z-10 py-12 text-center" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <p className="text-white/15 text-xs tracking-widest uppercase font-body mb-4">
-          © 2024 HireMeOrRoastMe · Powered by Gemini AI
+          HireMeOrRoastMe · Powered by Gemini AI
         </p>
-        <a 
-          href="https://www.linkedin.com/in/csadharsh/" 
-          target="_blank" 
+        <a
+          href="https://www.linkedin.com/in/csadharsh/"
+          target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-white/30 hover:text-primary transition-colors text-xs font-semibold tracking-widest uppercase group"
         >
