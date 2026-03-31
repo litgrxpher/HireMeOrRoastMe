@@ -110,6 +110,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [targetRole, setTargetRole] = useState('');
   const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [profileText, setProfileText] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -126,8 +127,8 @@ export default function LandingPage() {
       setError('Please enter a target role.');
       return;
     }
-    if (!linkedinUrl.trim() && !selectedFile) {
-      setError('Please provide a LinkedIn URL or upload a resume.');
+    if (!linkedinUrl.trim() && !selectedFile && !profileText.trim()) {
+      setError('Please provide a resume, LinkedIn URL, or profile content.');
       return;
     }
 
@@ -135,6 +136,7 @@ export default function LandingPage() {
       state: {
         role: targetRole.trim(),
         linkedinUrl: linkedinUrl.trim(),
+        profileText: profileText.trim(),
         resumeFile: selectedFile // Note: File objects might not persist well in history state depending on browser, but fine for now.
       }
     });
@@ -289,7 +291,7 @@ export default function LandingPage() {
         });
       },
       { 
-        threshold: 0.05,
+        threshold: 0.05, 
         rootMargin: '0px 0px -10% 0px'
       }
     );
@@ -439,18 +441,36 @@ export default function LandingPage() {
             </div>
 
             {/* LinkedIn */}
-            <div className="space-y-1.5">
-              <label className="block text-[10px] uppercase tracking-[0.2em] text-white/30 font-semibold">LinkedIn URL</label>
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-purple-400/60 text-lg">link</span>
-                <input
-                  className="w-full py-3.5 pl-11 pr-4 rounded-xl text-white text-sm font-body outline-none transition-all"
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] uppercase tracking-[0.2em] text-white/30 font-semibold">LinkedIn URL</label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-purple-400/60 text-lg">link</span>
+                  <input
+                    className="w-full py-3.5 pl-11 pr-4 rounded-xl text-white text-sm font-body outline-none transition-all"
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(139,92,246,0.08)'; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    placeholder="https://linkedin.com/in/yourname"
+                    value={linkedinUrl}
+                    onChange={(e) => setLinkedinUrl(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="block text-[10px] uppercase tracking-[0.2em] text-white/30 font-semibold">Or Paste Profile Content</label>
+                  <span className="text-[9px] text-primary/60 font-semibold tracking-wider uppercase bg-primary/10 px-2 py-0.5 rounded">Higher Accuracy</span>
+                </div>
+                <textarea
+                  className="w-full py-3.5 px-4 rounded-xl text-white text-sm font-body outline-none transition-all min-h-[100px] resize-none"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}
                   onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(139,92,246,0.08)'; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
-                  placeholder="https://linkedin.com/in/yourname"
-                  value={linkedinUrl}
-                  onChange={(e) => setLinkedinUrl(e.target.value)}
+                  placeholder="Paste your LinkedIn 'About' or 'Experience' section here for a deeper roast..."
+                  value={profileText}
+                  onChange={(e) => setProfileText(e.target.value)}
                 />
               </div>
             </div>

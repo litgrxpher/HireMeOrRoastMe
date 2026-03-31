@@ -21,7 +21,7 @@ const upload = multer({
 
 app.post('/api/analyze', upload.single('resume'), async (req, res) => {
   try {
-    const { mode, roastLevel, targetRole, linkedinUrl } = req.body;
+    const { mode, roastLevel, targetRole, linkedinUrl, profileText } = req.body;
     let resumeText = '';
 
     if (req.file) {
@@ -39,15 +39,23 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
       } else {
         return res.status(400).json({ error: "Unsupported file type. Please upload PDF or DOCX." });
       }
-    } else if (linkedinUrl) {
-      resumeText = `LinkedIn URL provided: ${linkedinUrl}. Please review the overall profile logic if LinkedIn scraping isn't implemented.`;
     }
 
-    if (!resumeText && !linkedinUrl) {
-      return res.status(400).json({ error: "Please provide a resume file or LinkedIn URL." });
+    if (!resumeText && !linkedinUrl && !profileText) {
+      return res.status(400).json({ error: "Please provide a resume, LinkedIn URL, or profile content." });
     }
 
-    const result = await generateAnalysis({ resumeText, mode, roastLevel, targetRole, linkedinUrl });
+    // Fallback if only URL is provided and we aren't scraping yet
+    const finalContent = profileText || resumeText || (linkedinUrl ? `LinkedIn URL: ${linkedinUrl}` : '');
+
+    const result = await generateAnalysis({ 
+      resumeText: finalContent, 
+      mode, 
+      roastLevel, 
+      targetRole, 
+      linkedinUrl,
+      profileText 
+    });
     res.json(result);
   } catch (error) {
     console.error('Error analyzing resume:', error);

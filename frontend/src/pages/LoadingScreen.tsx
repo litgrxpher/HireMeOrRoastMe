@@ -44,7 +44,7 @@ const STYLES = `
 export default function LoadingScreen() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { role, linkedinUrl, resumeFile, mode, roastLevel } = location.state || {};
+  const { role, linkedinUrl, profileText, resumeFile, mode, roastLevel } = location.state || {};
 
   const [messageIndex, setMessageIndex] = useState(0);
 
@@ -60,16 +60,34 @@ export default function LoadingScreen() {
         formData.append('roastLevel', roastLevel || 'Medium');
         formData.append('targetRole', role || '');
         if (linkedinUrl) formData.append('linkedinUrl', linkedinUrl);
+        if (profileText) formData.append('profileText', profileText);
         if (resumeFile) formData.append('resume', resumeFile);
 
         const baseUrl = import.meta.env.VITE_API_URL || '';
         const [response] = await Promise.all([
           fetch(`${baseUrl}/api/analyze`, { method: 'POST', body: formData }),
-          new Promise(r => setTimeout(r, 4000))
+          new Promise(r => setTimeout(r, 2000)) // Reduced minimum wait time
         ]);
         
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to analyze');
+        let data;
+        const contentType = response.headers.get("content-type");
+        
+        if (response.ok) {
+          if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+          } else {
+            throw new Error("Server succeeded but didn't return JSON.");
+          }
+        } else {
+          // Handle error cases
+          if (contentType && contentType.includes("application/json")) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Server error (${response.status})`);
+          } else {
+            const errorText = await response.text();
+            throw new Error(errorText || `Server returned error ${response.status}`);
+          }
+        }
 
         navigate('/results', { state: { role, mode, roastLevel, analysis: data } });
       } catch (err) {

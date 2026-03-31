@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 export default function ModeSelectionPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { role, linkedinUrl, resumeFile } = location.state || {};
+  const { role, linkedinUrl, profileText, resumeFile } = location.state || {};
   
   const [selectedMode, setSelectedMode] = useState<string | null>(null);
   const [roastLevel, setRoastLevel] = useState<string>("Medium");
@@ -15,6 +15,7 @@ export default function ModeSelectionPage() {
       state: { 
         role, 
         linkedinUrl, 
+        profileText,
         resumeFile, // Pass through the file
         mode: selectedMode, 
         roastLevel 
