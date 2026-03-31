@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const { PDFParse } = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
 const { generateAnalysis, fixResume } = require('./geminiService');
 
@@ -30,13 +30,8 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
 
     if (req.file) {
       if (req.file.mimetype === 'application/pdf') {
-        const parser = new PDFParse({ data: req.file.buffer });
-        try {
-          const result = await parser.getText();
-          resumeText = result.text;
-        } finally {
-          await parser.destroy();
-        }
+        const data = await pdfParse(req.file.buffer);
+        resumeText = data.text;
       } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
         const data = await mammoth.extractRawText({ buffer: req.file.buffer });
         resumeText = data.value;
