@@ -19,6 +19,10 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', environment: process.env.NODE_ENV || 'production' });
+});
+
 app.post('/api/analyze', upload.single('resume'), async (req, res) => {
   try {
     const { mode, roastLevel, targetRole, linkedinUrl, profileText } = req.body;
@@ -45,7 +49,6 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
       return res.status(400).json({ error: "Please provide a resume, LinkedIn URL, or profile content." });
     }
 
-    // Fallback if only URL is provided and we aren't scraping yet
     const finalContent = profileText || resumeText || (linkedinUrl ? `LinkedIn URL: ${linkedinUrl}` : '');
 
     const result = await generateAnalysis({ 
@@ -59,7 +62,7 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Error analyzing resume:', error);
-    res.status(500).json({ error: 'Failed to analyze resume. ' + error.message });
+    res.status(500).json({ error: 'Failed to analyze resume: ' + error.message });
   }
 });
 
@@ -73,12 +76,15 @@ app.post('/api/fix-resume', async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error('Error fixing resume:', error);
-    res.status(500).json({ error: 'Failed to fix resume. ' + error.message });
+    res.status(500).json({ error: 'Failed to fix resume: ' + error.message });
   }
 });
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`HireMeOrRoastMe backend running on port ${port}`);
-});
+// On Vercel, we export the app and don't call app.listen()
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`HireMeOrRoastMe backend running locally on port ${port}`);
+  });
+}
 
 module.exports = app;
