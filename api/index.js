@@ -1,10 +1,6 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
-const mammoth = require('mammoth');
-const { generateAnalysis, fixResume } = require('./geminiService');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -12,7 +8,7 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Set up Multer for memory storage (we don't save files locally)
+// Set up Multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage, 
@@ -30,9 +26,11 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
 
     if (req.file) {
       if (req.file.mimetype === 'application/pdf') {
+        const pdfParse = require('pdf-parse');
         const data = await pdfParse(req.file.buffer);
         resumeText = data.text;
       } else if (req.file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        const mammoth = require('mammoth');
         const data = await mammoth.extractRawText({ buffer: req.file.buffer });
         resumeText = data.value;
       } else {
@@ -46,6 +44,7 @@ app.post('/api/analyze', upload.single('resume'), async (req, res) => {
 
     const finalContent = profileText || resumeText || (linkedinUrl ? `LinkedIn URL: ${linkedinUrl}` : '');
 
+    const { generateAnalysis } = require('./geminiService');
     const result = await generateAnalysis({ 
       resumeText: finalContent, 
       mode, 
@@ -67,6 +66,7 @@ app.post('/api/fix-resume', async (req, res) => {
     if (!resumeText) {
       return res.status(400).json({ error: "Please provide resume text to fix." });
     }
+    const { fixResume } = require('./geminiService');
     const result = await fixResume({ resumeText, targetRole });
     res.json(result);
   } catch (error) {
@@ -75,7 +75,6 @@ app.post('/api/fix-resume', async (req, res) => {
   }
 });
 
-// On Vercel, we export the app and don't call app.listen()
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
   app.listen(port, '0.0.0.0', () => {
     console.log(`HireMeOrRoastMe backend running locally on port ${port}`);
