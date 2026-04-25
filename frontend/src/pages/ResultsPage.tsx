@@ -8,8 +8,55 @@ export default function ResultsPage() {
   const { role, mode, roastLevel, analysis, error } = location.state || { mode: 'Both' };
   const roastCardRef = useRef<HTMLDivElement>(null);
 
-  const profData = analysis?.professional || {};
-  const roastData = analysis?.roast || {};
+  const safeArray = (val: any): any[] => {
+    if (!val) return [];
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'object') return Object.values(val);
+    return [String(val)];
+  };
+
+  const safeString = (val: any): string => {
+    if (!val) return '';
+    if (typeof val === 'string') return val;
+    if (typeof val === 'object') {
+      try { return JSON.stringify(val); } catch { return ''; }
+    }
+    return String(val);
+  };
+
+  const safeNumber = (val: any, fallback: string | number = '--') => {
+    if (val === null || val === undefined) return fallback;
+    const num = Number(val);
+    return isNaN(num) ? fallback : num;
+  };
+
+  const rawProf = analysis?.professional || {};
+  const rawRoast = analysis?.roast || {};
+
+  const profData = {
+    hireabilityScore: safeNumber(rawProf.hireabilityScore),
+    resumeScore: safeNumber(rawProf.resumeScore),
+    selfPerception: safeString(rawProf.selfPerception),
+    recruiterPerception: safeString(rawProf.recruiterPerception),
+    overallImpression: safeString(rawProf.overallImpression),
+    strengths: safeArray(rawProf.strengths).map(safeString),
+    weaknesses: safeArray(rawProf.weaknesses).map(safeString),
+    missingSkills: safeArray(rawProf.missingSkills).map(safeString),
+    careerDistance: safeString(rawProf.careerDistance),
+    suggestedSkills: safeArray(rawProf.suggestedSkills).map(safeString),
+    fixedResumeBullets: safeArray(rawProf.fixedResumeBullets).map(safeString)
+  };
+
+  const roastData = {
+    openingPunchline: safeString(rawRoast.openingPunchline),
+    personalityType: safeString(rawRoast.personalityType),
+    personalityDescription: safeString(rawRoast.personalityDescription),
+    vibeScore: safeNumber(rawRoast.vibeScore),
+    buzzwordDensity: safeNumber(rawRoast.buzzwordDensity, 0) as number,
+    substanceDensity: safeNumber(rawRoast.substanceDensity, null) as number | null,
+    realityCheck: safeString(rawRoast.realityCheck),
+    skillsRoast: safeString(rawRoast.skillsRoast)
+  };
 
   const showProfessional = (mode?.toLowerCase() === 'professional' || mode?.toLowerCase() === 'both');
   const showRoast = (mode?.toLowerCase() === 'roast' || mode?.toLowerCase() === 'both');
@@ -212,13 +259,13 @@ export default function ResultsPage() {
                   <div className="glass-panel p-5 rounded-xl border border-white/5 space-y-3">
                     <h3 className="font-headline font-semibold text-sm uppercase tracking-wide text-[#7FC37E]">Strengths</h3>
                     <ul className="space-y-2 text-sm text-on-surface-variant list-disc pl-4 marker:text-[#7FC37E]">
-                      {(profData.strengths || []).map((s: string, i: number) => <li key={i}>{s}</li>)}
+                      {profData.strengths.map((s: string, i: number) => <li key={i}>{s}</li>)}
                     </ul>
                   </div>
                   <div className="glass-panel p-5 rounded-xl border border-white/5 space-y-3">
                     <h3 className="font-headline font-semibold text-sm uppercase tracking-wide text-[#FFB4AB]">Weaknesses</h3>
                     <ul className="space-y-2 text-sm text-on-surface-variant list-disc pl-4 marker:text-[#FFB4AB]">
-                      {(profData.weaknesses || []).map((w: string, i: number) => <li key={i}>{w}</li>)}
+                      {profData.weaknesses.map((w: string, i: number) => <li key={i}>{w}</li>)}
                     </ul>
                   </div>
                 </div>
