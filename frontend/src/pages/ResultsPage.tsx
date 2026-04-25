@@ -24,7 +24,7 @@ export default function ResultsPage() {
     return String(val);
   };
 
-  const safeNumber = (val: any, fallback: string | number = '--') => {
+  const safeNumber = (val: any, fallback: string | number | null = '--') => {
     if (val === null || val === undefined) return fallback;
     const num = Number(val);
     return isNaN(num) ? fallback : num;
