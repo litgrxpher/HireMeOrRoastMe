@@ -114,17 +114,11 @@ async function fixResume(params) {
 async function callGemini(prompt, instruction) {
     const apiKey = process.env.GEMINI_API_KEY;
     return new Promise((resolve, reject) => {
-        let model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+        let model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
         
         // Sanitize: Remove 'models/' prefix if user added it to the env var by mistake
         if (model.startsWith('models/')) {
             model = model.replace('models/', '');
-        }
-
-        // Temporary fix: If the model name is obviously invalid (like 3.1), fallback to stable 2.0
-        if (model.includes('3.1')) {
-            console.warn(`Invalid model detected (${model}). Falling back to gemini-2.0-flash.`);
-            model = 'gemini-2.0-flash';
         }
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -143,7 +137,7 @@ async function callGemini(prompt, instruction) {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(payload)
             },
-            timeout: 9000 // Match the 9s timeout for Vercel functions
+            timeout: 60000 // Increased to 60s
         };
 
         console.log(`Calling Gemini API (${model}) via https module...`);
@@ -190,7 +184,7 @@ async function callGemini(prompt, instruction) {
 
         req.on('timeout', () => {
             req.destroy();
-            reject(new Error('Gemini API request timed out after 9 seconds. This is a Vercel limit for serverless functions.'));
+            reject(new Error('Gemini API request timed out after 60 seconds.'));
         });
 
         req.write(payload);
